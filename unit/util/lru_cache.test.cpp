@@ -64,3 +64,38 @@ BOOST_AUTO_TEST_CASE(get_should_return_null_ok)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+// ** Base methods
+// Check whether the methods are behaving ok
+
+BOOST_AUTO_TEST_SUITE(methods)
+
+BOOST_AUTO_TEST_CASE(insertion_should_increase_size_ok_1)
+{
+  lru_cache<int, int> obj(10);
+  obj.insert(0, 1);
+  int expected = 1;
+  int actual = obj.size();
+  BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(insertion_should_increase_size_ok_2)
+{
+  lru_cache<int, int> obj(10);
+  obj.insert(0, 1);
+  obj.insert(1, 1);
+  int expected = 2;
+  int actual = obj.size();
+  BOOST_TEST(expected == actual);
+}
+BOOST_AUTO_TEST_CASE(insertion_should_respect_max_size_ok)
+{
+  lru_cache<int, int> obj(2);
+  obj.insert(0, 1);
+  obj.insert(1, 1);
+  obj.insert(2, 2);
+  int expected = 2;
+  int actual = obj.size();
+  BOOST_TEST(expected == actual);
+}
+BOOST_AUTO_TEST_SUITE_END()
