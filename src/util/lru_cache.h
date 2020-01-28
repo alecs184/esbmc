@@ -36,9 +36,9 @@ public:
   {
   }
 
-  V &get(const K &key)
+  V *get(const K &key)
   {
-    return 0;
+    return nullptr;
   }
 
   bool exists(const K &key)
