@@ -55,12 +55,10 @@ BOOST_AUTO_TEST_CASE(element_doest_not_exist_ok)
   BOOST_TEST(expected == actual);
 }
 
-BOOST_AUTO_TEST_CASE(get_should_return_null_ok)
+BOOST_AUTO_TEST_CASE(get_should_throw_exception)
 {
   lru_cache<int, int> obj(10);
-  int *expected = NULL;
-  int *actual = obj.get(0);
-  BOOST_TEST(expected == actual);
+  BOOST_CHECK_THROW(obj.get(0), std::range_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -97,5 +95,76 @@ BOOST_AUTO_TEST_CASE(insertion_should_respect_max_size_ok)
   int expected = 2;
   int actual = obj.size();
   BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(insert_element_same_ok)
+{
+  lru_cache<int, int> obj(2);
+  obj.insert(0, 1);
+  obj.insert(0, 2);
+  obj.insert(0, 3);
+  int expected = 1;
+  int actual = obj.size();
+  BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(element_in_list_ok_1)
+{
+  lru_cache<int, int> obj(2);
+  obj.insert(0, 1);
+  bool expected = false;
+  bool actual = obj.exists(2);
+  BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(element_in_list_ok_2)
+{
+  lru_cache<int, int> obj(2);
+  obj.insert(0, 1);
+  bool expected = true;
+  bool actual = obj.exists(0);
+  BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(element_in_list_ok_3)
+{
+  lru_cache<int, int> obj(2);
+  obj.insert(0, 1);
+  obj.insert(1, 2);
+  obj.insert(2, 3);
+  bool expected = false;
+  bool actual = obj.exists(0);
+  BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(element_in_list_ok_4)
+{
+  lru_cache<int, int> obj(2);
+  obj.insert(0, 1);
+  obj.insert(1, 2);
+  obj.insert(2, 3);
+  bool expected = true;
+  bool actual = obj.exists(2);
+  BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(get_element_ok_1)
+{
+  lru_cache<int, int> obj(2);
+  obj.insert(0, 1);
+  obj.insert(1, 2);
+
+  int expected = 2;
+  int actual = obj.get(1);
+  BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(get_element_fail_1)
+{
+  lru_cache<int, int> obj(2);
+  obj.insert(0, 1);
+  obj.insert(1, 2);
+  obj.insert(2, 3);
+  BOOST_CHECK_THROW(obj.get(0), std::range_error);
 }
 BOOST_AUTO_TEST_SUITE_END()
