@@ -24,9 +24,12 @@ public:
   explicit ssa_step_algorithm(symex_target_equationt::SSA_stepst &steps)
     : steps(steps)
   {
-    for(auto i : steps) {
-      if(i.is_assert()) {
-        std::cout << "Got an assert "  << "\n";
+    for(auto i : steps)
+    {
+      if(i.is_assert())
+      {
+        std::cout << "Got an assert "
+                  << "\n";
         auto &cond = i.cond;
         cond->dump();
       }

@@ -16,10 +16,8 @@
  *  @see smt_ast
  */
 
-
 class smt_cache
 {
-
 };
 
 #endif //ESBMC_CACHE_H
