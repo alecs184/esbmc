@@ -239,6 +239,14 @@ public:
   typedef esbmct::field_traits<type2tc, pointer_data, &pointer_data::subtype>
     subtype_field;
   typedef esbmct::type2t_traits<subtype_field> traits;
+private:
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version)
+  {
+    ar &boost::serialization::base_object<type2t>(*this);
+    ar &subtype;
+  }
 };
 
 class fixedbv_data : public type2t
@@ -646,6 +654,15 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+
+private:
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version)
+  {
+    ar &boost::serialization::base_object<pointer_data>(*this);
+  }
+
 };
 
 /** Fixed bitvector type.

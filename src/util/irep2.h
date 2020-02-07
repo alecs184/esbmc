@@ -5,6 +5,10 @@
  *  Classes and definitions for non-stringy internal representation.
  */
 
+#include <boost/archive/detail/common_oarchive.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/export.hpp>
+
 #include <big-int/bigint.hh>
 #include <boost/bind/placeholders.hpp>
 #include <boost/crc.hpp>
@@ -34,7 +38,7 @@
 #include <util/irep.h>
 #include <vector>
 
-#include <boost/archive/detail/common_oarchive.hpp>
+
 
 // Ahead of time: a list of all expressions and types, in a preprocessing
 // list, for enumerating later. Should avoid manually enumerating anywhere
@@ -175,6 +179,7 @@ class constant_array2t;
 template <class T>
 class irep_container : public std::shared_ptr<T>
 {
+
 public:
   irep_container() : std::shared_ptr<T>()
   {
@@ -289,6 +294,9 @@ public:
 
     return foo->do_crc();
   }
+
+private:
+
 };
 
 typedef irep_container<type2t> type2tc;
@@ -489,7 +497,6 @@ public:
   }
 
   /** Instance of type_ids recording this types type. */
-  // XXX XXX XXX this should be const
   type_ids type_id;
 
   mutable size_t crc_val;
@@ -502,7 +509,11 @@ private:
     ar &type_id;
     ar &crc_val;
   }
+
+
+
 };
+
 
 /** Fetch identifying name for a type.
  *  I.E., this is the class of the type, what you'd get if you called type.id()
@@ -780,6 +791,7 @@ private:
   template <class Archive>
   void serialize(Archive &ar, const unsigned int version)
   {
+    ar &boost::serialization::base_object<type2t>(*this);
     ar &type;
     ar &expr_id;
   }
