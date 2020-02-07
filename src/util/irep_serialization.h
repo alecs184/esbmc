@@ -12,7 +12,7 @@ Date: May 2007
 #define IREP_SERIALIZATION_H_
 
 #include <map>
-#include <util/irep.h>
+#include <util/irep2.h>
 
 /**
  * Class used for irep serialization, containing methods to save/load for later
@@ -45,23 +45,6 @@ private:
     bool operator()(const irept &i1, const irept &i2) const
     {
       return i1.full_hash() < i2.full_hash();
-    }
-  };
-
-  /**
-   * Helper class to compare two irep
-   */
-  struct irep_content_eq
-  {
-    /**
-     * Compares equality between two ireps
-     * @param l
-     * @param r
-     * @return boolean value representing if l and r are equal
-     */
-    bool operator()(const irept &l, const irept &r) const
-    {
-      return full_eq(l, r);
     }
   };
 
@@ -98,14 +81,9 @@ public:
 
   /**
    * Constructor for serialization
-   *
-   * initializes read_buffer with the char 0.
    * @param ic container which will hold the serialization.
    */
-  explicit irep_serializationt(ireps_containert &ic) : ireps_container(ic)
-  {
-    clear();
-  };
+  explicit irep_serializationt(ireps_containert &ic) : ireps_container(ic){};
 
   /**
    * Checks if a reference was already read and then stores it in an irept
@@ -190,6 +168,22 @@ private:
    * @param irep reference to be initizalized
    */
   void read_irep(std::istream &in, irept &irep);
+
+  /**
+   * Writes an irep to an output stream
+   * @param out output stream
+   * @param irep to be serialized
+   */
+  void write_irep2(std::ostream &out, const type2tc &irep);
+
+  void write_irep2(std::ostream &out, const expr2tc &irep);
+
+  /**
+   * Read an input stream and converts it to an irept
+   * @param in input stream to be read
+   * @param irep reference to be initialized
+   */
+  void read_irep2(std::istream &in, type2tc &irep);
 };
 
 #endif /*IREP_SERIALIZATION_H_*/

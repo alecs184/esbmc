@@ -345,7 +345,7 @@ irep_typedefs(bool, type2t) irep_typedefs(empty, type2t)
 
   /** Boolean type.
  *  Identifies a boolean type. Contains no additional data.
- *  @extends typet
+ *  @extends type2t
  */
   class bool_type2t : public bool_type_methods
 {
@@ -357,6 +357,14 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+
+private:
+  friend class boost::serialization::access;
+  template <class Archive>
+  void serialize(Archive &ar, const unsigned int version)
+  {
+    ar &boost::serialization::base_object<type2t>(*this);
+  }
 };
 
 /** Empty type.
