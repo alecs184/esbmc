@@ -17,6 +17,27 @@
 #include <util/irep2_type.h>
 #include <boost/test/included/unit_test.hpp>
 
+
+template <class T>
+void write_load_serialization(T &original, T &copy) {
+  std::ofstream ofs("filename");
+
+  // save data to archive
+  {
+    boost::archive::text_oarchive oa(ofs);
+    // write class instance to archive
+    oa << original;
+    // // archive and stream closed when destructors are called
+  }
+
+  {
+    std::ifstream ifs("filename");
+    boost::archive::text_iarchive ia(ifs);
+    // read class state from archive
+    ia >> copy;
+  }
+}
+
 // ******************** TESTS ********************
 
 // ** Constructors
@@ -50,26 +71,9 @@ BOOST_AUTO_TEST_CASE(write_read_string)
 
 BOOST_AUTO_TEST_CASE(write_read_bool_type2t)
 {
-  std::ofstream ofs("filename");
-
-  bool_type2t expected;
-  expected.type_id = type2t::type_ids::code_id;
-  // save data to archive
-  {
-    boost::archive::text_oarchive oa(ofs);
-    // write class instance to archive
-    oa << expected;
-    // // archive and stream closed when destructors are called
-  }
-
-  bool_type2t actual;
-  {
-    std::ifstream ifs("filename");
-    boost::archive::text_iarchive ia(ifs);
-    // read class state from archive
-    ia >> actual;
-  }
-
+  bool_type2t expected, actual;
+  expected.type_id = type2t::type_ids::floatbv_id;
+  write_load_serialization(expected, actual);
   BOOST_CHECK_EQUAL(expected.type_id, actual.type_id);
 }
 
