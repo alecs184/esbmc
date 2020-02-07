@@ -16,6 +16,8 @@
 #include <util/irep2.h>
 #include <util/irep2_type.h>
 #include <boost/test/included/unit_test.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 
 template <class T>
@@ -69,12 +71,48 @@ BOOST_AUTO_TEST_CASE(write_read_string)
   BOOST_CHECK_EQUAL(expected, actual);
 }
 
+BOOST_AUTO_TEST_CASE(write_read_dstring)
+{
+  dstring expected("asd"), actual("qwe");
+  write_load_serialization(expected, actual);
+  BOOST_CHECK_EQUAL(expected, actual);
+}
+
 BOOST_AUTO_TEST_CASE(write_read_bool_type2t)
 {
   bool_type2t expected, actual;
   expected.type_id = type2t::type_ids::floatbv_id;
   write_load_serialization(expected, actual);
   BOOST_CHECK_EQUAL(expected.type_id, actual.type_id);
+}
+
+BOOST_AUTO_TEST_CASE(write_read_empty_type2t)
+{
+  empty_type2t expected, actual;
+  expected.type_id = type2t::type_ids::floatbv_id;
+  write_load_serialization(expected, actual);
+  BOOST_CHECK_EQUAL(expected.type_id, actual.type_id);
+}
+
+BOOST_AUTO_TEST_CASE(write_read_symbol_type2t)
+{
+  symbol_type2t expected("asd"), actual("qwe");
+  write_load_serialization(expected, actual);
+  BOOST_CHECK_EQUAL(expected.symbol_name, actual.symbol_name);
+}
+
+BOOST_AUTO_TEST_CASE(write_read_unsignedbv_type2t)
+{
+  unsignedbv_type2t expected(7), actual(9);
+  write_load_serialization(expected, actual);
+  BOOST_CHECK_EQUAL(expected.width, actual.width);
+}
+
+BOOST_AUTO_TEST_CASE(write_read_signedbv_type2t)
+{
+  signedbv_type2t expected(7), actual(9);
+  write_load_serialization(expected, actual);
+  BOOST_CHECK_EQUAL(expected.width, actual.width);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -34,10 +34,7 @@
 #include <util/irep.h>
 #include <vector>
 
-#include <fstream>
-// include headers that implement a archive in simple text format
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/detail/common_oarchive.hpp>
 
 // Ahead of time: a list of all expressions and types, in a preprocessing
 // list, for enumerating later. Should avoid manually enumerating anywhere
