@@ -46,6 +46,7 @@ public:
     field_traits<irep_idt, symbol_type_data, &symbol_type_data::symbol_name>
       symbol_name_field;
   typedef esbmct::type2t_traits<symbol_name_field> traits;
+
 private:
   friend class boost::serialization::access;
   template <class Archive>
@@ -144,6 +145,7 @@ public:
   typedef esbmct::field_traits<unsigned int, bv_data, &bv_data::width>
     width_field;
   typedef esbmct::type2t_traits<width_field> traits;
+
 private:
   friend class boost::serialization::access;
   template <class Archive>
@@ -397,6 +399,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+
 private:
   friend class boost::serialization::access;
   template <class Archive>
@@ -423,6 +426,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+
 private:
   friend class boost::serialization::access;
   template <class Archive>
@@ -518,6 +522,7 @@ public:
   unsignedbv_type2t(const unsignedbv_type2t &ref) = default;
 
   static std::string field_names[esbmct::num_type_fields];
+
 private:
   friend class boost::serialization::access;
   template <class Archive>
@@ -542,6 +547,7 @@ public:
   signedbv_type2t(const signedbv_type2t &ref) = default;
 
   static std::string field_names[esbmct::num_type_fields];
+
 private:
   friend class boost::serialization::access;
   template <class Archive>
