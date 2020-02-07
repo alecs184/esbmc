@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(write_long_buffer)
   unsigned expected = 1234;
   unsigned actual;
   std::ostringstream stream;
-  write_long(stream, 1234);
+  irep_serializationt::write_long(stream, 1234);
   std::istringstream instream;
   instream.str(stream.str());
   actual = irep_serializationt::read_long(instream);
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(write_string_buffer)
   std::string expected = "1234";
   std::string actual;
   std::ostringstream stream;
-  write_string(stream, "1234");
+  irep_serializationt::write_string(stream, "1234");
   std::istringstream instream;
   instream.str(stream.str());
   actual = irep_serializationt::read_string(instream).as_string();

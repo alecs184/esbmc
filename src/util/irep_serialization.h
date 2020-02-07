@@ -15,20 +15,6 @@ Date: May 2007
 #include <util/irep.h>
 
 /**
- * Sends a long to a output stream
- * @param out output stream
- * @param u long to be sent to output
- */
-void write_long(std::ostream &out, unsigned u);
-
-/**
- * Sends a string to a output stream
- * @param out output stream
- * @param s string to be sent to output
- */
-void write_string(std::ostream &out, const std::string &s);
-
-/**
  * Class used for irep serialization, containing methods to save/load for later
  * usage.
  */
@@ -173,6 +159,20 @@ public:
  * @return
  */
   static dstring read_string(std::istream &in);
+
+  /**
+   * Sends a long to a output stream
+   * @param out output stream
+   * @param u long to be sent to output
+   */
+  static void write_long(std::ostream &out, unsigned u);
+
+  /**
+ * Sends a string to a output stream
+ * @param out output stream
+ * @param s string to be sent to output
+ */
+  static void write_string(std::ostream &out, const std::string &s);
 
 private:
   ireps_containert &ireps_container;
