@@ -46,15 +46,6 @@ public:
     field_traits<irep_idt, symbol_type_data, &symbol_type_data::symbol_name>
       symbol_name_field;
   typedef esbmct::type2t_traits<symbol_name_field> traits;
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<type2t>(*this);
-    ar &symbol_name;
-  }
 };
 
 class struct_union_data : public type2t
@@ -145,15 +136,6 @@ public:
   typedef esbmct::field_traits<unsigned int, bv_data, &bv_data::width>
     width_field;
   typedef esbmct::type2t_traits<width_field> traits;
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<type2t>(*this);
-    ar &width;
-  }
 };
 
 class code_data : public type2t
@@ -239,14 +221,6 @@ public:
   typedef esbmct::field_traits<type2tc, pointer_data, &pointer_data::subtype>
     subtype_field;
   typedef esbmct::type2t_traits<subtype_field> traits;
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<type2t>(*this);
-    ar &subtype;
-  }
 };
 
 class fixedbv_data : public type2t
@@ -383,14 +357,6 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<type2t>(*this);
-  }
 };
 
 /** Empty type.
@@ -407,14 +373,6 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<type2t>(*this);
-  }
 };
 
 /** Symbolic type.
@@ -434,14 +392,6 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<symbol_type_data>(*this);
-  }
 };
 
 /** Struct type.
@@ -530,14 +480,6 @@ public:
   unsignedbv_type2t(const unsignedbv_type2t &ref) = default;
 
   static std::string field_names[esbmct::num_type_fields];
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<bv_data>(*this);
-  }
 };
 
 /** Signed integer type.
@@ -555,14 +497,6 @@ public:
   signedbv_type2t(const signedbv_type2t &ref) = default;
 
   static std::string field_names[esbmct::num_type_fields];
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<bv_data>(*this);
-  }
 };
 
 /** Empty type. For void pointers and the like, with no type. No extra data */
@@ -654,15 +588,6 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<pointer_data>(*this);
-  }
-
 };
 
 /** Fixed bitvector type.
