@@ -196,3 +196,63 @@ irep_idt irep_serializationt::read_string_ref(std::istream &in)
   ireps_container.string_rev_map[id] = std::pair<bool, dstring>(true, s);
   return ireps_container.string_rev_map[id].second;
 }
+
+/*
+** SPECIALIZATIONS FOR EVERYTHING IREP2 RELATED
+*/
+
+// irep_containert
+
+template <>
+void type2tc::serialize(std::ostream &os)
+{
+  os << "type2tc";
+}
+
+template <>
+std::shared_ptr<irep_serializable> type2tc::create(std::istream &in)
+{
+  return std::make_shared<type2tc>();
+}
+
+template <>
+void expr2tc::serialize(std::ostream &os)
+{
+  os << "expr2tc";
+}
+
+template <>
+std::shared_ptr<irep_serializable> expr2tc::create(std::istream &in)
+{
+  return std::make_shared<expr2tc>();
+}
+
+template <>
+std::shared_ptr<type2tc> type2tc::unserialize(std::istream &in)
+{
+  static std::map<std::string, std::unique_ptr<type2tc>> subclasses;
+  subclasses["type2tc"] = std::make_unique<type2tc>();
+
+  std::string classname;
+  in >> classname;
+  if(subclasses.find(classname) == subclasses.end())
+    throw std::bad_cast();
+
+  std::shared_ptr<irep_serializable> ptr = subclasses[classname]->create(in);
+  return std::static_pointer_cast<type2tc>(ptr);
+}
+
+template <>
+std::shared_ptr<expr2tc> expr2tc::unserialize(std::istream &in)
+{
+  static std::map<std::string, std::unique_ptr<expr2tc>> subclasses;
+  subclasses["expr2tc"] = std::make_unique<expr2tc>();
+
+  std::string classname;
+  in >> classname;
+  if(subclasses.find(classname) == subclasses.end())
+    throw std::bad_cast();
+
+  std::shared_ptr<irep_serializable> ptr = subclasses[classname]->create(in);
+  return std::static_pointer_cast<expr2tc>(ptr);
+}

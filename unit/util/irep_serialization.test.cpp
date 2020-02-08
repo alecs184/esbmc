@@ -16,106 +16,93 @@
 #include <util/irep2.h>
 #include <util/irep2_type.h>
 #include <boost/test/included/unit_test.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
+#include <boost/test/framework.hpp>
 
+namespace btf = boost::unit_test::framework;
+// THIS APPROACH IS NOT THREAD SAFE!!!!
+void write_serialization(
+  irep_serializable &original,
+  const std::string &file_name)
+{
+  std::ofstream ofs(file_name, std::ofstream::binary);
+  original.serialize(ofs);
+}
 
-template <class T>
-void write_load_serialization(T &original, T &copy) {
-  std::ofstream ofs("filename",  std::ofstream::binary);
-
-
-  // save data to archive
-  {
-    boost::archive::binary_oarchive oa(ofs, boost::archive::no_header);
-    // write class instance to archive
-
-    oa << original;
-    // // archive and stream closed when destructors are called
-  }
-
-  {
-    std::ifstream ifs("filename", std::ofstream::binary);
-    boost::archive::binary_iarchive ia(ifs, boost::archive::no_header);
-    // read class state from archive
-    ia >> copy;
-  }
+std::unique_ptr<std::istream> load_serialization(const std::string &file_name)
+{
+  auto ptr = std::make_unique<std::ifstream>(file_name, std::ifstream::binary);
+  return std::move(ptr);
 }
 
 // ******************** TESTS ********************
 
-// ** Constructors
-// Check whether the object is initialized correctly
+// ** type deduction
+// Check whether the object is reconstructed with correct type
 
-BOOST_AUTO_TEST_SUITE(serializaton)
-BOOST_AUTO_TEST_CASE(write_read_long)
+BOOST_AUTO_TEST_SUITE(type_deduction)
+
+BOOST_AUTO_TEST_CASE(type2tc_deduction_ok)
 {
-  unsigned expected = 1234;
-  unsigned actual;
-  std::ostringstream stream;
-  irep_serializationt::write_long(stream, 1234);
-  std::istringstream instream;
-  instream.str(stream.str());
-  actual = irep_serializationt::read_long(instream);
+  std::string file_name(
+    btf::current_test_case().p_name);
 
-  BOOST_CHECK_EQUAL(expected, actual);
+  type2tc obj;
+  write_serialization(obj, file_name);
+  auto istream = load_serialization(file_name);
+
+  std::shared_ptr<type2tc> ptr = type2tc::unserialize(*istream);
+  // No exception should have been thrown
 }
 
-BOOST_AUTO_TEST_CASE(write_read_string)
+BOOST_AUTO_TEST_CASE(type2tc_deduction_fail)
 {
-  std::string expected = "1234";
-  std::string actual;
-  std::ostringstream stream;
-  irep_serializationt::write_string(stream, "1234");
-  std::istringstream instream;
-  instream.str(stream.str());
-  actual = irep_serializationt::read_string(instream).as_string();
-  BOOST_CHECK_EQUAL(expected, actual);
+  std::string file_name(
+    btf::current_test_case().p_name);
+
+  expr2tc obj;
+  write_serialization(obj, file_name);
+  auto istream = load_serialization(file_name);
+
+  // This is an invalid cast
+  BOOST_CHECK_THROW(
+    type2tc::unserialize(*istream),
+    std::bad_cast
+    );
 }
 
-BOOST_AUTO_TEST_CASE(write_read_dstring)
+BOOST_AUTO_TEST_CASE(expr2tc_deduction_ok)
 {
-  dstring expected("asd"), actual("qwe");
-  write_load_serialization(expected, actual);
-  BOOST_CHECK_EQUAL(expected, actual);
+  std::string file_name(
+    btf::current_test_case().p_name);
+
+  expr2tc obj;
+  write_serialization(obj, file_name);
+  auto istream = load_serialization(file_name);
+
+  std::shared_ptr<expr2tc> ptr = expr2tc::unserialize(*istream);
+  // No exception should have been thrown
 }
 
-BOOST_AUTO_TEST_CASE(write_read_bool_type2t)
+BOOST_AUTO_TEST_CASE(expr2tc_deduction_fail)
 {
-  bool_type2t expected, actual;
-  expected.type_id = type2t::type_ids::floatbv_id;
-  write_load_serialization(expected, actual);
-  BOOST_CHECK_EQUAL(expected.type_id, actual.type_id);
+  std::string file_name(
+    btf::current_test_case().p_name);
+
+  type2tc obj;
+  write_serialization(obj, file_name);
+  auto istream = load_serialization(file_name);
+
+  // This is an invalid cast
+  BOOST_CHECK_THROW(
+    expr2tc::unserialize(*istream),
+    std::bad_cast
+  );
 }
+BOOST_AUTO_TEST_SUITE_END();
 
-BOOST_AUTO_TEST_CASE(write_read_empty_type2t)
-{
-  empty_type2t expected, actual;
-  expected.type_id = type2t::type_ids::floatbv_id;
-  write_load_serialization(expected, actual);
-  BOOST_CHECK_EQUAL(expected.type_id, actual.type_id);
-}
+// ** irep2_container
+// Check whether the container is reconstructed correctly
 
-BOOST_AUTO_TEST_CASE(write_read_symbol_type2t)
-{
-  symbol_type2t expected("asd"), actual("qwe");
-  write_load_serialization(expected, actual);
-  BOOST_CHECK_EQUAL(expected.symbol_name, actual.symbol_name);
-}
+BOOST_AUTO_TEST_SUITE(irep2_container)
 
-BOOST_AUTO_TEST_CASE(write_read_unsignedbv_type2t)
-{
-  unsignedbv_type2t expected(7), actual(9);
-  write_load_serialization(expected, actual);
-  BOOST_CHECK_EQUAL(expected.width, actual.width);
-}
-
-BOOST_AUTO_TEST_CASE(write_read_signedbv_type2t)
-{
-  signedbv_type2t expected(7), actual(9);
-  write_load_serialization(expected, actual);
-  BOOST_CHECK_EQUAL(expected.width, actual.width);
-}
-
-
-BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END();

@@ -5,10 +5,6 @@
  *  Classes and definitions for non-stringy internal representation.
  */
 
-#include <boost/archive/detail/common_oarchive.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/export.hpp>
-
 #include <big-int/bigint.hh>
 #include <boost/bind/placeholders.hpp>
 #include <boost/crc.hpp>
@@ -37,8 +33,6 @@
 #include <util/dstring.h>
 #include <util/irep.h>
 #include <vector>
-
-
 
 // Ahead of time: a list of all expressions and types, in a preprocessing
 // list, for enumerating later. Should avoid manually enumerating anywhere
@@ -152,6 +146,16 @@ class type2t;
 class expr2t;
 class constant_array2t;
 
+/**
+ * Interface used for irep2 serialization, all irep2 should implement it
+ */
+class irep_serializable
+{
+public:
+  virtual void serialize(std::ostream &os) = 0;
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) = 0;
+};
+
 /** Reference counted container for expr2t based classes.
  *  This class extends boost shared_ptr's to contain anything that's a subclass
  *  of expr2t. It provides several ways of accessing the contained pointer;
@@ -177,9 +181,8 @@ class constant_array2t;
  *  boosts shared_ptr.
  */
 template <class T>
-class irep_container : public std::shared_ptr<T>
+class irep_container : public std::shared_ptr<T>, public irep_serializable
 {
-
 public:
   irep_container() : std::shared_ptr<T>()
   {
@@ -294,9 +297,9 @@ public:
 
     return foo->do_crc();
   }
-
-private:
-
+  virtual void serialize(std::ostream &os);
+  static std::shared_ptr<irep_container<T>> unserialize(std::istream &in);
+  virtual std::shared_ptr<irep_serializable> create(std::istream &);
 };
 
 typedef irep_container<type2t> type2tc;
@@ -500,20 +503,7 @@ public:
   type_ids type_id;
 
   mutable size_t crc_val;
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &type_id;
-    ar &crc_val;
-  }
-
-
-
 };
-
 
 /** Fetch identifying name for a type.
  *  I.E., this is the class of the type, what you'd get if you called type.id()
@@ -785,16 +775,6 @@ public:
   type2tc type;
 
   mutable size_t crc_val;
-
-private:
-  friend class boost::serialization::access;
-  template <class Archive>
-  void serialize(Archive &ar, const unsigned int version)
-  {
-    ar &boost::serialization::base_object<type2t>(*this);
-    ar &type;
-    ar &expr_id;
-  }
 };
 
 inline bool is_nil_expr(const expr2tc &exp)
