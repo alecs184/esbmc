@@ -312,7 +312,7 @@ typedef std::list<member_entryt> list_of_memberst;
  *  Contains only a type identifier enumeration - for some types (such as bool,
  *  or empty,) there's no need for any significant amount of data to be stored.
  */
-class type2t : public std::enable_shared_from_this<type2t>
+class type2t : public std::enable_shared_from_this<type2t>, public irep_serializable
 {
 public:
   /** Enumeration identifying each sort of type. */
@@ -503,6 +503,10 @@ public:
   type_ids type_id;
 
   mutable size_t crc_val;
+
+  virtual void serialize(std::ostream &os);
+  static std::shared_ptr<type2t> unserialize(std::istream &in);
+  virtual std::shared_ptr<irep_serializable> create(std::istream &);
 };
 
 /** Fetch identifying name for a type.

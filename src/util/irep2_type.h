@@ -357,6 +357,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Empty type.
@@ -373,6 +374,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Symbolic type.
@@ -392,6 +394,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Struct type.
@@ -427,6 +430,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Union type.
@@ -462,6 +466,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Unsigned integer type.
@@ -480,6 +485,7 @@ public:
   unsignedbv_type2t(const unsignedbv_type2t &ref) = default;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Signed integer type.
@@ -497,6 +503,7 @@ public:
   signedbv_type2t(const signedbv_type2t &ref) = default;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Empty type. For void pointers and the like, with no type. No extra data */
@@ -515,6 +522,7 @@ public:
   code_type2t(const code_type2t &ref) = default;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Array type.
@@ -570,6 +578,7 @@ public:
   };
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Pointer type.
@@ -588,6 +597,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Fixed bitvector type.
@@ -611,6 +621,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** Floating-point bitvector type.
@@ -634,6 +645,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** String type class.
@@ -657,6 +669,7 @@ public:
   virtual unsigned int get_length() const;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 /** C++ Name type.
@@ -680,6 +693,7 @@ public:
   unsigned int get_width() const override;
 
   static std::string field_names[esbmct::num_type_fields];
+  virtual std::shared_ptr<irep_serializable> create(std::istream &) override;
 };
 
 // Generate some "is-this-a-blah" macros, and type conversion macros. This is
