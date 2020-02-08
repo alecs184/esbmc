@@ -262,7 +262,7 @@ std::shared_ptr<expr2tc> expr2tc::unserialize(std::istream &in)
 
 void type2t::serialize(std::ostream &os)
 {
-  unsigned value = (unsigned) this->type_id;
+  unsigned value = (unsigned)this->type_id;
   os << value;
 }
 
@@ -287,7 +287,8 @@ std::shared_ptr<irep_serializable> struct_type2t::create(std::istream &in)
   std::vector<irep_idt> memb_vec;
   std::vector<irep_idt> memb_pretty_vec;
   irep_idt name;
-  return std::make_shared<struct_type2t>(type_vec, memb_vec, memb_pretty_vec, name, false);
+  return std::make_shared<struct_type2t>(
+    type_vec, memb_vec, memb_pretty_vec, name, false);
 }
 
 std::shared_ptr<irep_serializable> union_type2t::create(std::istream &in)
@@ -297,7 +298,8 @@ std::shared_ptr<irep_serializable> union_type2t::create(std::istream &in)
   std::vector<irep_idt> memb_pretty_vec;
   irep_idt name;
 
-  return std::make_shared<union_type2t>(type_vec, memb_vec, memb_pretty_vec, name);
+  return std::make_shared<union_type2t>(
+    type_vec, memb_vec, memb_pretty_vec, name);
 }
 
 std::shared_ptr<irep_serializable> unsignedbv_type2t::create(std::istream &in)
@@ -333,12 +335,12 @@ std::shared_ptr<irep_serializable> pointer_type2t::create(std::istream &in)
 
 std::shared_ptr<irep_serializable> fixedbv_type2t::create(std::istream &in)
 {
-  return std::make_shared<fixedbv_type2t>(1,1);
+  return std::make_shared<fixedbv_type2t>(1, 1);
 }
 
 std::shared_ptr<irep_serializable> floatbv_type2t::create(std::istream &in)
 {
-  return std::make_shared<floatbv_type2t>(1,1);
+  return std::make_shared<floatbv_type2t>(1, 1);
 }
 
 std::shared_ptr<irep_serializable> string_type2t::create(std::istream &in)
@@ -357,7 +359,6 @@ std::shared_ptr<irep_serializable> type2t::create(std::istream &in)
 {
   throw std::runtime_error("type2t is never directly created");
 }
-
 
 std::shared_ptr<type2t> type2t::unserialize(std::istream &in)
 {
@@ -386,25 +387,37 @@ std::shared_ptr<type2t> type2t::unserialize(std::istream &in)
 
   static std::map<type2t::type_ids, std::unique_ptr<type2t>> subclasses;
   subclasses[type2t::type_ids::bool_id] = std::make_unique<bool_type2t>();
-  subclasses[type2t::type_ids::cpp_name_id] = std::make_unique<cpp_name_type2t>(irep_cpp_name_type2t, vec_irep_cpp_name_type2t);
+  subclasses[type2t::type_ids::cpp_name_id] = std::make_unique<cpp_name_type2t>(
+    irep_cpp_name_type2t, vec_irep_cpp_name_type2t);
   subclasses[type2t::type_ids::string_id] = std::make_unique<string_type2t>(0);
-  subclasses[type2t::type_ids::floatbv_id] = std::make_unique<floatbv_type2t>(0,1);
-  subclasses[type2t::type_ids::fixedbv_id] = std::make_unique<fixedbv_type2t>(0,1);
-  subclasses[type2t::type_ids::pointer_id] = std::make_unique<pointer_type2t>(container_pointer_type2t);
-  subclasses[type2t::type_ids::array_id] = std::make_unique<array_type2t>(tc_array_type2t, ec_array_type2t, true);
-  subclasses[type2t::type_ids::code_id] = std::make_unique<code_type2t>(vec_code_type2t, tc_code_type2t, names_code_type2t, true);
-  subclasses[type2t::type_ids::signedbv_id] = std::make_unique<signedbv_type2t>(0);
-  subclasses[type2t::type_ids::unsignedbv_id] = std::make_unique<unsignedbv_type2t>(0);
+  subclasses[type2t::type_ids::floatbv_id] =
+    std::make_unique<floatbv_type2t>(0, 1);
+  subclasses[type2t::type_ids::fixedbv_id] =
+    std::make_unique<fixedbv_type2t>(0, 1);
+  subclasses[type2t::type_ids::pointer_id] =
+    std::make_unique<pointer_type2t>(container_pointer_type2t);
+  subclasses[type2t::type_ids::array_id] =
+    std::make_unique<array_type2t>(tc_array_type2t, ec_array_type2t, true);
+  subclasses[type2t::type_ids::code_id] = std::make_unique<code_type2t>(
+    vec_code_type2t, tc_code_type2t, names_code_type2t, true);
+  subclasses[type2t::type_ids::signedbv_id] =
+    std::make_unique<signedbv_type2t>(0);
+  subclasses[type2t::type_ids::unsignedbv_id] =
+    std::make_unique<unsignedbv_type2t>(0);
   subclasses[type2t::type_ids::empty_id] = std::make_unique<empty_type2t>();
-  subclasses[type2t::type_ids::union_id] = std::make_unique<union_type2t>(tc_union_type2t, irep_union_type2t, irep2_union_type2t, name_union_type2t);
-  subclasses[type2t::type_ids::struct_id] = std::make_unique<struct_type2t>(tc_union_type2t, irep_union_type2t, irep2_union_type2t, name_union_type2t);
-  subclasses[type2t::type_ids::symbol_id] = std::make_unique<symbol_type2t>("asd");
+  subclasses[type2t::type_ids::union_id] = std::make_unique<union_type2t>(
+    tc_union_type2t, irep_union_type2t, irep2_union_type2t, name_union_type2t);
+  subclasses[type2t::type_ids::struct_id] = std::make_unique<struct_type2t>(
+    tc_union_type2t, irep_union_type2t, irep2_union_type2t, name_union_type2t);
+  subclasses[type2t::type_ids::symbol_id] =
+    std::make_unique<symbol_type2t>("asd");
 
   unsigned classname;
   in >> classname;
-  if(subclasses.find((type2t::type_ids) classname) == subclasses.end())
+  if(subclasses.find((type2t::type_ids)classname) == subclasses.end())
     throw std::bad_cast();
 
-  std::shared_ptr<irep_serializable> ptr = subclasses[(type2t::type_ids) classname]->create(in);
+  std::shared_ptr<irep_serializable> ptr =
+    subclasses[(type2t::type_ids)classname]->create(in);
   return std::dynamic_pointer_cast<type2t>(ptr);
 }
