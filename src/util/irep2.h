@@ -534,7 +534,8 @@ static inline std::string get_type_id(const type2tc &type)
  *  classes of expr, in addition we have a type as all exprs should have types.
  */
 class expr2t;
-class expr2t : public std::enable_shared_from_this<expr2t>
+class expr2t : public std::enable_shared_from_this<expr2t>,
+               public irep_serializable
 {
 public:
   /** Enumeration identifying each sort of expr.
@@ -780,6 +781,10 @@ public:
   type2tc type;
 
   mutable size_t crc_val;
+
+  virtual void serialize(std::ostream &os);
+  static std::shared_ptr<expr2t> unserialize(std::istream &in);
+  virtual std::shared_ptr<irep_serializable> create(std::istream &);
 };
 
 inline bool is_nil_expr(const expr2tc &exp)
